@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 models/*.keras
 dataset/
+emotion.db
+.pytest_cache/

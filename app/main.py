@@ -1,19 +1,25 @@
-from fastapi import FastAPI, UploadFile, File
-from app.predictor import predict_emotion
+from fastapi import FastAPI
 
-app = FastAPI(title='Emotion Recognition API')
+from app.api.routes import router
+from app.database.database import Base, engine
+from app.middleware.exception_handler import global_exception_handler
 
-@app.get('/')
-def home():
-    return {'message': 'Emotion Recognition API Running'}
+import app.database.models
 
-@app.post('/predict')
-async def predict(file: UploadFile = File(...)):
-    image_bytes = await file.read()
 
-    emotion, confidence = predict_emotion(image_bytes)
+Base.metadata.create_all(bind=engine)
 
-    return {
-        'emotion': emotion,
-        'confidence': round(confidence, 4)
-    }
+
+app = FastAPI(
+    title="Emotion Recognition API",
+    description="Emotion Recognition System using Deep Learning",
+    version="1.0.0"
+)
+
+
+app.add_exception_handler(
+    Exception,
+    global_exception_handler
+)
+
+app.include_router(router)
