@@ -7,24 +7,32 @@ from app.services.predictor import predict_emotion
 from app.database.database import get_db
 from app.database.crud import create_prediction, get_predictions
 from app.api.schemas import PredictionResponse
+from app.middleware.logger import prediction_logger
 
 router = APIRouter()
 
 
 @router.post("/predict")
-async def predict(
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db)
-):
+async def predict( file: UploadFile = File(...), db: Session = Depends(get_db) ):
+
     image = Image.open(file.file)
 
     result = predict_emotion(image)
 
+    emotion = result["emotion"]
+    confidence = result["confidence"]
+
+    # SAVE TO DATABASE
     create_prediction(
         db=db,
         image_name=file.filename,
-        emotion=result["emotion"],
-        confidence=result["confidence"]
+        emotion=emotion,
+        confidence=confidence
+    )
+
+    # ADD THIS LOGGING LINE HERE
+    prediction_logger.info(
+        f"Predicted emotion: {emotion} | confidence: {confidence}"
     )
 
     return result
@@ -34,7 +42,5 @@ async def predict(
     "/predictions",
     response_model=List[PredictionResponse]
 )
-def prediction_history(
-    db: Session = Depends(get_db)
-):
+def prediction_history( db: Session = Depends(get_db) ):
     return get_predictions(db)

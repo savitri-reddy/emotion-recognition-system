@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+from app.middleware.logger import logger
+
+from fastapi import FastAPI
 
 from app.api.routes import router
 from app.database.database import Base, engine
