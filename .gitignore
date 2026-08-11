@@ -5,3 +5,6 @@ models/*.keras
 dataset/
 emotion.db
 .pytest_cache/
+logs/
+
+
