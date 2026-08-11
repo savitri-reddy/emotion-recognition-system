@@ -1,3 +1,4 @@
+Set-Content -Path Dockerfile -Value @"
 FROM python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -24,3 +25,4 @@ COPY . .
 EXPOSE 8000
 
 CMD ["python", "run.py"]
+"@
