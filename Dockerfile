@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Replaced libgl1-mesa-glx with libgl1
+# Swapped libgl1-mesa-glx for libgl1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libgl1 \
