@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  emotion-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: emotion_recognition_container
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount models and logs locally so model updates or logs persist outside the container
+      - ./models:/app/models
+      - ./app.log:/app/app.log
+      - ./prediction.log:/app/prediction.log
+    restart: unless-stopped
